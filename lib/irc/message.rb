@@ -14,7 +14,13 @@ module IRC
         [\ ]+
       )?
       (?<command>[a-z]+|[0-9]{3})
-      (?<params>.*)
+      (?<params>
+        \ 
+        (
+          :(?<trailing>.+)
+        |
+        )
+      )
       \r\n
     /xi
 
