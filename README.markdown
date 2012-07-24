@@ -15,7 +15,7 @@ end
 
 # Tell the time and date
 match /!time/ do
-  reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' ) ' ])
+  reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
 start!
