@@ -39,7 +39,7 @@ mention_match /forget (?<something>.+)/i do
   reply "I forgot #{something}."
 end
 
-match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
+mention_match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   s = something
   s = nick if something.downcase == 'i'
   what = store["factoid.#{s}"]
@@ -68,7 +68,7 @@ mention_match /callbacks( *(with *)?(?<term>\S+))?/ do
   response = ''
   response << "I have #{'callback'.pluralize(callbacks.count)}"
   response << " containing #{term.inspect}" if term
-  response << "."
+  response << ". I've sent them to you."
 
   reply response
   callbacks.each do |c|
