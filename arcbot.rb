@@ -22,7 +22,6 @@ mention_match /time/ do
 end
 
 match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<what>.+)[^?]*$/i do
-  reply "#{something} #{verb} #{what}"
   something, verb = nick, 'is' if something.upcase == 'I'
   key = "factoid.#{something}"
 
@@ -31,6 +30,7 @@ match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<wha
     store[key][:what] << what if !store[key][:what].include?(what)
     store[key][:what].delete(what) if del
   end
+  reply store.get(key).inspect
 end
 
 mention_match /forget (?<something>.+)/i do
