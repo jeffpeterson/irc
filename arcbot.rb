@@ -63,7 +63,7 @@ mention_match /join (?<chan>#\S+)/ do
   reply "I joined #{ch.to_sentence}."
 end
 
-mention_match /part (?<chan>#\S+)/ do
+mention_match /(part|leave) (?<chan>#\S+)/ do
   connection.write "PART #{chan}"
   ch = chan.split(',')
   reply "I parted #{ch.to_sentence}."
