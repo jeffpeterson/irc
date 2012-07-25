@@ -13,18 +13,21 @@ module IRC
         @store ||= PStore.new name
       end
 
-      def [] key
+      def get key
         store.transaction do
           store[key]
         end
       end
 
-      def []= key, value
+      def set key, value
         store.transaction do
           store[key] = value
         end
       end
 
+      def method_missing method_name, *args, &block
+        store.send method_name, *args, &block
+      end
     end
   end
 end

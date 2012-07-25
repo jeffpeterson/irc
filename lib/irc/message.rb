@@ -23,7 +23,11 @@ module IRC
 
     REGEX.names.each do |name|
       define_method name do 
-        self[name.to_s]
+        send("@#{name} ||= self['#{name}']")
+      end
+
+      define_method "#{name}=" do |value|
+        instance_variable_set("@#{name}", value)
       end
     end
 

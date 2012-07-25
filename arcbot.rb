@@ -21,24 +21,19 @@ mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
-match /(?<something>[^\.,!\?:]+) (?<verb>is|are|am) ((?<delete_mode>not) )?(?<what>.+)[^?]*$/i do
-  s, v = something, verb
-  s, v = nick, 'is' if verb.downcase == 'am' && something.upcase == 'I'
+match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<what>.+)[^?]*$/i do
+  something, verb = nick, 'is' if something.upcase == 'I'
+  key = "factoid.#{something}"
 
-  key = "factoid.#{s}"
-  temp = store[key] || {verb:v, what:[]}
-
-  if temp[:what].include?(what)
-    temp[:what].delete(what) if delete_mode
-  else
-    temp[:what] << what
+  store.transaction do
+    store[key] ||= {verb:verb, what:[]}
+    store[key][:what] << what if !store[key][:what].include?(what)
+    store[key][:what].delete(what) if del
   end
-
-  store[key] = temp
 end
 
 mention_match /forget (?<something>.+)/i do
-  store["factoid.#{something}"] = nil
+  store.set "factoid.#{something}", nil
   reply "I forgot #{something}."
 end
 
@@ -46,7 +41,7 @@ mention_match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   s = something
   s = nick if something.downcase == 'i'
   what = store["factoid.#{s}"]
-  if what
+  if !!what
     if s != nick
       reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
     else
