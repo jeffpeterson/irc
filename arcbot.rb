@@ -33,7 +33,7 @@ end
 mention_match /callbacks( (?<term>\S+))?/ do
   callbacks = []
   IRC::Callback.callbacks[:all].each do |callback|
-    callbacks << %{"#{callback.action}: #{callback.regex.inspect}"}
+    callbacks << %{#{callback.action}: "#{callback.regex.inspect}"}
   end
   callbacks.select! {|c| c[term] } if term
 
@@ -45,7 +45,7 @@ mention_match /callbacks( (?<term>\S+))?/ do
   reply response
 end
 
-mention_match /ping (?<something>\S+)/ do
+match /^ping (?<something>\S+)/ do
   `ping -c1 #{something}`
   case $?.exitstatus
   when 0
