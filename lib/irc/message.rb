@@ -2,7 +2,7 @@ module IRC
   class Message
     attr_accessor :connection
 
-    REGEX = /
+    REGEX = /^
       (:
         (?<prefix>
           (
@@ -15,13 +15,10 @@ module IRC
       )?
       (?<command>[a-z]+|[0-9]{3})
       (?<params>
-        \ 
-        (
-          :(?<trailing>.+)
-        |
-        )
+        (\ +(?<middle>[^:\r\n\ ][^\r\n\ ]*))*
+        (\ *:(?<trailing>.+))?
       )
-      \r\n
+      \r\n$
     /xi
 
     # :irc.petersonj.com 001 arcbot :Welcome to the Internet Relay Network arcbot!~arcbot@localhost

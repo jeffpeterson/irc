@@ -1,10 +1,21 @@
 require 'irc'
 
+def reload!
+  self.class.reset!
+
+  files = []
+  Dir.glob("*bot.rb").each do |file|
+    files << file
+    load file
+  end
+  files
+end
+
 host  'localhost'
-port  6667
+port  6669
 
 nick    'arcbot'
-channel '#geekboy'
+channel '#bottest'
 
 mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
@@ -15,16 +26,7 @@ end
 # end
 
 mention_match /reload!/ do
-  self.class.reset!
-
-  files = []
-
-  Dir.glob("*bot.rb").each do |file|
-    files << file
-
-    load file
-  end
-
+  files = reload!
   reply "I reloaded #{files.map(&:inspect).to_sentence}."
 end
 
@@ -52,3 +54,5 @@ mention_match /ping (?<something>\S+)/ do
 end
 
 start!
+
+
