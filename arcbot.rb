@@ -45,8 +45,8 @@ mention_match /callbacks( (with )?(?<term>\S+))?/ do
   reply response
 end
 
-match /^ping (?<something>\S+)/ do
-  something.split(',').each do |site|
+match /^ping (?<something>.+)/ do
+  something.split(/[, ]+/).each do |site|
     `ping -c1 #{site}`
     case $?.exitstatus
     when 0
