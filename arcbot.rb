@@ -103,6 +103,10 @@ mention_match /(part|leave) (?<chan>#\S+)/ do
   reply "I parted #{ch.to_sentence}."
 end
 
+match /bot roll call/ do
+  say "arcbots, roll out!"
+end
+
 start!
 
 
