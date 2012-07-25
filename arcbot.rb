@@ -30,7 +30,7 @@ mention_match /reload!/ do
   reply "I reloaded #{files.map(&:inspect).to_sentence}."
 end
 
-mention_match /callbacks( (?<term>\S+))?/ do
+mention_match /callbacks( (with )?(?<term>\S+))?/ do
   callbacks = []
   IRC::Callback.callbacks[:all].each do |callback|
     callbacks << %{#{callback.action}: "#{callback.regex.inspect}"}
