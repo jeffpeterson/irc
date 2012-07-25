@@ -65,7 +65,7 @@ end
 
 mention_match /part (?<chan>#\S+)/ do
   connection.write "PART #{chan}"
-  ch = chan.split!(',')
+  ch = chan.split(',')
   reply "I parted #{ch.to_sentence}."
 end
 
