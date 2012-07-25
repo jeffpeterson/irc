@@ -37,7 +37,12 @@ mention_match /callbacks( (?<term>\S+))?/ do
   end
   callbacks.select! {|c| c[term] } if term
 
-  reply "my callbacks: " + callbacks.to_sentence
+  response = ''
+  response << "I have #{'callback'.pluralize(callbacks.count)}"
+  response << " matching #{term.inspect}" if term
+  response << "#{': ' + callbacks.to_sentence if callbacks.any?}."
+
+  reply response
 end
 
 mention_match /ping (?<something>\S+)/ do
