@@ -40,6 +40,7 @@ mention_match /forget (?<something>.+)/i do
 end
 
 match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
+  s = something
   s = nick if something.downcase == 'i'
   what = store["factoid.#{s}"]
   if !what.nil?
