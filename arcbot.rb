@@ -100,7 +100,8 @@ mention_match /join (?<chan>.+)/ do
 end
 
 mention_match /(part|leave) (?<chan>.+)/ do
-  ch,rejected = chan.split(/[, ]+/).partition {|c| c[0] == "#" && !channels.include?(c) }
+  ch, rejected = chan.split(/[, ]+/).partition {|c| c[0] == "#" && !channels.include?(c) }
+  reply "matched"
   connection.part ch
   reply "I parted #{ch.to_sentence}."
   reply "I'm sorry, I'm configured not to part #{rejected.to_sentence}."
