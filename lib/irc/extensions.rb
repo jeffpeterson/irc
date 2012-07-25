@@ -13,6 +13,19 @@ class Array
   end
 end
 
+class String
+  def pluralize number = 2
+    case number
+    when 0
+      "no #{self}s"
+    when 1
+      "1 #{self}"
+    else
+      "#{number} #{self}s"
+    end
+  end
+end
+
 class Regexp
   def +(r)
     Regexp.new(source + r.source)
