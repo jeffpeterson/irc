@@ -38,7 +38,6 @@ mention_match /callbacks( (?<term>\S+))?/ do
   callbacks.select! {|c| c[term] } if term
 
   reply "my callbacks: " + callbacks.to_sentence
-
 end
 
 mention_match /ping (?<something>\S+)/ do
@@ -52,6 +51,7 @@ mention_match /ping (?<something>\S+)/ do
     reply "#{something} is not valid."
   end
 end
+
 
 start!
 
