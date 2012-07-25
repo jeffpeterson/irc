@@ -11,11 +11,11 @@ def reload!
   files
 end
 
-host  'localhost'
-port  6669
+host  'dot'
+port  6667
 
 nick    'arcbot'
-channel '#bottest'
+channel '#geekboy'
 
 mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
