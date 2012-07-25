@@ -21,8 +21,6 @@ module IRC
       \r\n$
     /xi
 
-    # :irc.petersonj.com 001 arcbot :Welcome to the Internet Relay Network arcbot!~arcbot@localhost
-
     REGEX.names.each do |name|
       define_method name do 
         self[name.to_s]
@@ -34,8 +32,6 @@ module IRC
       @connection = connection
       @match = REGEX.match(message_string)
       @raw = message_string
-
-      # puts  "<- " + inspect
     end
 
     def [] key
@@ -47,11 +43,11 @@ module IRC
     end
 
     def action
-      command.downcase.to_sym
+      @action ||= command.downcase.to_sym
     end
 
     def content
-      @content ||= params.gsub(/^[ ]*:/,'')
+      @content ||= trailing || middle
     end
 
     def raw
