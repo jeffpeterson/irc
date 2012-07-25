@@ -1,6 +1,7 @@
 Usage
 =====
-## Quickstart Method
+
+## Quickstart
 ``` ruby
 require 'irc'
 
@@ -13,15 +14,19 @@ on :join do
   say "Hi #{nick}!" if nick != 'MyBot'
 end
 
-# Tell the time and date
+# Tell the time and date:
 match /!time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
 start!
 ```
+Then, `ruby newbot.rb`
 
-## Sub-Class Method
+
+## Subclass
+
+You can also `require 'irc/base'` and subclass `IRC::Bot`:
 ``` ruby
 require 'irc/base'
 
@@ -34,9 +39,9 @@ class MyBot < IRC::Bot
 end
 ```
 
-You can re-load the bot to update its callbacks:
+You can re-load the bot to update its callbacks without disconnecting:
 ``` ruby
-# mention_match requires the name of the bot in a message
+# mention_match requires messages to start with the name of the bot
 mention_match /reload!/ do
   self.class.reset!
 
