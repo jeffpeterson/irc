@@ -21,7 +21,7 @@ mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
-match /(?<something>[^\.!\?:]+) (?<verb>is|are|am) (?<what>[^\.!?]+)[^?]*$/i do
+match /(?<something>[^\.,!\?:]+) (?<verb>is|are|am) (?<what>[^\.!?]+)[^?]*$/i do
   s, v = something, verb
   s, v = nick, 'is' if verb.downcase == 'am' && something.upcase == 'I'
 
@@ -43,12 +43,14 @@ mention_match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   s = something
   s = nick if something.downcase == 'i'
   what = store["factoid.#{s}"]
-  if !what.nil?
+  if what
     if s != nick
       reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
     else
       reply "you are #{what[:what].to_sentence}."
     end
+  else
+    reply %{I'm sorry, I have not heard of this, "#{something}", you speak of.}
   end
 end
 
