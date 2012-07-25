@@ -99,9 +99,9 @@ mention_match /join (?<chan>.+)/ do
   reply "I joined #{ch.to_sentence}."
 end
 
-mention_match /(part|leave) (?<chan>.+)$/ do
-  ch, rejected = chan.split(/[, ]+/).partition {|c| c[0] == "#" && !channels.include?(c) }
+mention_match /(part|leave) (?<chan>.+)/ do
   reply "matched"
+  ch, rejected = chan.split(/[, ]+/).partition {|c| c[0] == "#" && !self.class.channels.include?(c) }
   connection.part ch
   reply "I parted #{ch.to_sentence}."
   reply "I'm sorry, I'm configured not to part #{rejected.to_sentence}."
