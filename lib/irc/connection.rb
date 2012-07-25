@@ -22,9 +22,11 @@ module IRC
       end
     end
 
-    def join channel
-      @channel = channel
-      write "JOIN #{channel}"
+    def join *channels
+      channels.flatten.each do |channel|
+        @channel = channel
+        write "JOIN #{channel}"
+      end
     end
 
     def nick _nick, realname = nil
@@ -34,7 +36,7 @@ module IRC
     end
 
     def privmsg content, *recipients
-      recipients ||= @channel
+      recipients = @channel unless recipients.any?
       recipients = [recipients].flatten.join(',')
 
       write "PRIVMSG #{recipients} :#{content}"
@@ -61,6 +63,8 @@ module IRC
       unless @listening
         @listening = true
         socket.lines "\r\n" do |line|
+          puts "<- " + line
+
           message = Message.new(line, self)
           Callback.handle message
         end

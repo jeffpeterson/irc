@@ -30,7 +30,7 @@ module IRC
 
     def initialize message_string, connection
       @connection = connection
-      @match = REGEX.match(message_string)
+      @match = REGEX.match(message_string) || {}
       @raw = message_string
     end
 

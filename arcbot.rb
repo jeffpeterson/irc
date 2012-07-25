@@ -57,6 +57,10 @@ match /^ping (?<something>\S+)/ do
   end
 end
 
+mention_match /join (?<chan>#\S+)/ do
+  connection.join chan
+  reply "I joined #{chan}."
+end
 
 start!
 

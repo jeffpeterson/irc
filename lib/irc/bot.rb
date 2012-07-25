@@ -7,12 +7,17 @@ module IRC
     end
 
     def say something, recipients = nil
-      recipients = [(recipients || self.class.channel)].flatten.join(',')
-      message.connection.privmsg something, recipients
+      message.connection.privmsg something, recipients || self.class.channels
     end
 
-    def reply something
-      say "#{message.nick}, #{something}"
+    def reply something, mention = true
+      if message.middle == self.class.nick
+        say something, message.nick
+      elsif mention
+        say "#{message.nick}: #{something}", message.middle
+      else
+        say something, message.middle
+      end
     end
 
     def method_missing method_name, *args
@@ -20,7 +25,7 @@ module IRC
     end
 
     class << self
-      attr_accessor :nick, :host, :port, :channel, :channels
+      attr_accessor :nick, :host, :port, :channels
 
       def start!
         @connection ||= Connection.new @host, @port
@@ -28,13 +33,14 @@ module IRC
         on(:ping) { connection.pong params }
 
         @connection.nick @nick
-        @connection.join @channel
+        @connection.join @channels
 
         @connection.listen
       end
 
       def reset!
         Callback.reset!
+        @channels = []
       end
 
       def host _host = nil
@@ -52,9 +58,11 @@ module IRC
         @nick = _nick || @nick
       end
 
-      def channel _channel = nil
-        puts "channel: '#{_channel}'"
-        @channel = _channel || @channel
+      def channel *_channels
+        _channels.each do |c|
+          puts "channel: '#{c}'"
+          (@channels ||= []) << c
+        end
       end
 
       def match regex, &block
