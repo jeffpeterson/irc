@@ -22,7 +22,7 @@ mention_match /time/ do
 end
 
 match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<what>.+)[^?]*$/i do
-  something, verb = nick, 'is' if something.upcase == 'I'
+  # something, verb = nick, 'is' if something.upcase == 'I'
   key = "factoid.#{something}"
 
   store.transaction do
