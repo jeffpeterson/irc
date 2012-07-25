@@ -39,10 +39,11 @@ mention_match /forget (?<something>.+)/i do
   reply "I forgot #{something}."
 end
 
-match /(?<something>.+)\?/ do
+match /wh(at|who) (is|are|am) (?<something>.+)\?/i do
   what = store["factoid.#{something}"]
   if !what.nil?
-    reply "#{something == nick ? "you" : something} #{what[:verb]} #{what[:what].to_sentence}."
+    if something == nick
+    reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
   end
 end
 
