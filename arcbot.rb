@@ -62,12 +62,18 @@ mention_match /callbacks( *(with *)?(?<term>\S+))?/ do
   IRC::Callback.callbacks[:all].each do |callback|
     callbacks << %{#{callback.action}: "#{callback.regex.inspect}"}
   end
+
   callbacks.select! {|c| c[term] } if term
 
   response = ''
   response << "I have #{'callback'.pluralize(callbacks.count)}"
   response << " containing #{term.inspect}" if term
-  response << "#{': ' + callbacks.to_sentence if callbacks.any?}."
+  response << "."
+
+  reply response
+  callbacks.each do |c|
+    say c, nick
+  end
 
   reply response
 end
