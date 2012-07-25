@@ -39,7 +39,7 @@ mention_match /forget (?<something>.+)/i do
   reply "I forgot #{something}."
 end
 
-match /wh(at|who) (is|are|am) (?<something>.+)\?/i do
+match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   what = store["factoid.#{something}"]
   if !what.nil?
     if something == nick
@@ -103,8 +103,8 @@ mention_match /(part|leave) (?<chan>#\S+)/ do
   reply "I parted #{ch.to_sentence}."
 end
 
-match /bot roll call/ do
-  say "arcbots, roll out!"
+match /bot roll call/i do
+  reply "arcbots, roll out!", false
 end
 
 start!
