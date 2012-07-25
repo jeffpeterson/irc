@@ -66,6 +66,7 @@ module IRC
     def socket
       @socket ||= TCPSocket.open(@host, @port)
     end
+    Thread.abort_on_exception = true
 
     def listen
       unless @listening
