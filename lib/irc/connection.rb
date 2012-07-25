@@ -45,7 +45,9 @@ module IRC
       recipients = @channel unless recipients.any?
       recipients = [recipients].flatten.join(',')
 
-      write "PRIVMSG #{recipients} :#{content}"
+      msg = "PRIVMSG #{recipients} :#{content}"
+      write msg.slice!(0,500)
+      privmsg msg, recipients if msg != ''
     end
 
     def quit message = nil

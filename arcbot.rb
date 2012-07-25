@@ -12,7 +12,7 @@ def reload!
 end
 
 host  'dot'
-port  6667
+port  6669
 
 nick    'arcbot'
 channel '#geekboy'
@@ -21,9 +21,30 @@ mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
-# match /(?<something>.+) (?<article>is|are|am) (?<what>[^.]+)/ do
-#   say "#{something} #{article} #{what}"
-# end
+match /(?<something>[^\.!\?:]+) (?<verb>is|are|am) (?<what>[^\.!?]+)[^?]*$/i do
+  s, v = something, verb
+  s, v = nick, 'is' if verb.downcase == 'am' && something.upcase == 'I'
+
+  key = "factoid.#{s}"
+  temp = store[key] || {verb:v, what:[]}
+
+  if !temp[:what].include?(what)
+    temp[:what] << what
+    store[key] = temp
+  end
+end
+
+mention_match /forget (?<something>.+)/i do
+  store["factoid.#{something}"] = nil
+  reply "I forgot #{something}."
+end
+
+match /(?<something>.+)\?/ do
+  what = store["factoid.#{something}"]
+  if !what.nil?
+    reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
+  end
+end
 
 mention_match /re(?<verb>load|boot|set)!/ do
   files = reload!

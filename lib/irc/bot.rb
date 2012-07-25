@@ -20,6 +20,10 @@ module IRC
       end
     end
 
+    def store
+      IRC::Store
+    end
+
     def method_missing method_name, *args
       message.public_send method_name, *args
     end
@@ -54,7 +58,7 @@ module IRC
       end
 
       def nick _nick = nil
-        puts "   nick: '#{_nick}'"
+        puts "   nick: '#{_nick}'"  if _nick
         @nick = _nick || @nick
       end
 
