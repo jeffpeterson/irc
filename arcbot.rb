@@ -44,7 +44,7 @@ match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   s = nick if something.downcase == 'i'
   what = store["factoid.#{s}"]
   if !what.nil?
-    if something != nick
+    if s != nick
       reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
     else
       reply "you are #{what[:what].to_sentence}."
