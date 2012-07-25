@@ -57,7 +57,7 @@ mention_match /re(?<verb>load|boot|set)!/ do
   reply "I re#{verb}#{'ed' if !verb['set']} #{files.map(&:inspect).to_sentence}."
 end
 
-mention_match /callbacks( (with )?(?<term>\S+))?/ do
+mention_match /callbacks( *(with *)?(?<term>\S+))?/ do
   callbacks = []
   IRC::Callback.callbacks[:all].each do |callback|
     callbacks << %{#{callback.action}: "#{callback.regex.inspect}"}
