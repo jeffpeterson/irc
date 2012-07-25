@@ -25,9 +25,9 @@ end
 #   say "#{something} #{article} #{what}"
 # end
 
-mention_match /re(load|boot|set)!/ do
+mention_match /re(?<verb>load|boot|set)!/ do
   files = reload!
-  reply "I reloaded #{files.map(&:inspect).to_sentence}."
+  reply "I #{verb}#{'ed' if !verb['set']} #{files.map(&:inspect).to_sentence}."
 end
 
 mention_match /callbacks( (with )?(?<term>\S+))?/ do
