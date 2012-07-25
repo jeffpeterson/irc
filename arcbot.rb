@@ -15,7 +15,7 @@ host  'dot'
 port  6667
 
 nick    'arcbot'
-channel '#geekboy'
+channel '#geekboy', '#test'
 
 mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
@@ -94,15 +94,16 @@ match /^ping (?<something>.+)/ do
 end
 
 mention_match /join (?<chan>#\S+)/ do
-  
-  connection.join ch = chan.split(',')
+  ch = chan.split(',')
+  connection.join ch
   reply "I joined #{ch.to_sentence}."
 end
 
 mention_match /(part|leave) (?<chan>#\S+)/ do
-  connection.write "PART #{chan}"
-  ch = chan.split(',')
+  ch,rejected = chan.split(',').partition {|c| !channels.include?(c) }
+  connection.part ch
   reply "I parted #{ch.to_sentence}."
+  reply "I'm sorry, I'm configured not to part #{rejected.to_sentence}."
 end
 
 match /bot roll call/i do
@@ -110,5 +111,3 @@ match /bot roll call/i do
 end
 
 start!
-
-
