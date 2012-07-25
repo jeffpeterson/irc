@@ -21,17 +21,20 @@ mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
-match /(?<something>[^\.,!\?:]+) (?<verb>is|are|am) (?<what>[^\.!?]+)[^?]*$/i do
+match /(?<something>[^\.,!\?:]+) (?<verb>is|are|am) ((?<delete_mode>not) )?(?<what>.+)[^?]*$/i do
   s, v = something, verb
   s, v = nick, 'is' if verb.downcase == 'am' && something.upcase == 'I'
 
   key = "factoid.#{s}"
   temp = store[key] || {verb:v, what:[]}
 
-  if !temp[:what].include?(what)
+  if temp[:what].include?(what)
+    temp[:what].delete(what) if delete_mode
+  else
     temp[:what] << what
-    store[key] = temp
   end
+
+  store[key] = temp
 end
 
 mention_match /forget (?<something>.+)/i do
