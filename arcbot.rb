@@ -99,12 +99,12 @@ mention_match /join (?<chan>.+)/ do
   reply "I joined #{ch.to_sentence}."
 end
 
-mention_match /(part|leave) (?<chan>.+)/ do
+mention_match /(?<verb>part|leave) (?<chan>.+)/ do
   ch, rejected = chan.split(/[, ]+/).partition {|c| c[0] == "#" && !self.class.channels.include?(c) }
   connection.part ch
 
-  reply "I parted #{ch.to_sentence}." if ch.any?
-  reply "I'm sorry, I'm configured not to part #{rejected.to_sentence}." if rejected.any?
+  reply "I #{verb == 'leave' ? 'left' : 'parted'} #{ch.to_sentence}." if ch.any?
+  reply "I'm sorry, I'm configured not to #{verb} #{rejected.to_sentence}." if rejected.any?
 end
 
 match /bot roll call/i do
