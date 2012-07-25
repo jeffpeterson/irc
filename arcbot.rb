@@ -93,14 +93,14 @@ match /^ping (?<something>.+)/ do
   end
 end
 
-mention_match /join (?<chan>#.+)/ do
+mention_match /join (?<chan>.+)/ do
   ch = chan.split(/[, ]+/)
   connection.join ch
   reply "I joined #{ch.to_sentence}."
 end
 
-mention_match /(part|leave) (?<chan>#.+)/ do
-  ch,rejected = chan.split(/[, ]+/).partition {|c| !channels.include?(c) }
+mention_match /(part|leave) (?<chan>.+)/ do
+  ch,rejected = chan.split(/[, ]+/).partition {|c| c[0] == "#" && !channels.include?(c) }
   connection.part ch
   reply "I parted #{ch.to_sentence}."
   reply "I'm sorry, I'm configured not to part #{rejected.to_sentence}."
