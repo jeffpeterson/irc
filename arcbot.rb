@@ -74,8 +74,6 @@ mention_match /callbacks( *(with *)?(?<term>\S+))?/ do
   callbacks.each do |c|
     say c, nick
   end
-
-  reply response
 end
 
 match /^ping (?<something>.+)/ do
