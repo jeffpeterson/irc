@@ -59,7 +59,7 @@ end
 
 mention_match /join (?<chan>#\S+)/ do
   
-  connection.join ch = chan.split!(',')
+  connection.join ch = chan.split(',')
   reply "I joined #{ch.to_sentence}."
 end
 
