@@ -17,11 +17,13 @@ module IRC
           end
         end
 
-        if @factory
-          @factory.new(message).instance_eval(&@block)
-        else
-          puts "calling #{@block}"
-          @block.call(message, match)
+        Thread.new do
+          if @factory
+            @factory.new(message).instance_eval(&@block)
+          else
+            puts "calling #{@block}"
+            @block.call(message, match)
+          end
         end
       end
     end

@@ -12,7 +12,7 @@ def reload!
 end
 
 host  'dot'
-port  6669
+port  6667
 
 nick    'arcbot'
 channel '#geekboy'
