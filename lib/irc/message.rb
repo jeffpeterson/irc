@@ -8,7 +8,7 @@ module IRC
           (
             (?<servername>(?<nick>[a-z][a-z0-9\-\[\]\\`\^\{\}\.]*))
           )
-          (!(?<user>[a-z0-9~]+))?
+          (!(?<user>[a-z0-9~\.]+))?
           (@(?<host>[a-z0-9\.]+))?
         )
         [\ ]+
@@ -43,7 +43,7 @@ module IRC
     end
 
     def action
-      @action ||= command.downcase.to_sym
+      @action ||= (command || '').downcase.to_sym
     end
 
     def content
