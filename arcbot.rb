@@ -42,7 +42,7 @@ end
 match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   what = store["factoid.#{something}"]
   if !what.nil?
-    if something == nick
+    if something != nick
       reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
     else
       reply "you are #{what[:what].to_sentence}."
