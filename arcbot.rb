@@ -42,7 +42,7 @@ end
 match /(?<something>.+)\?/ do
   what = store["factoid.#{something}"]
   if !what.nil?
-    reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
+    reply "#{something == nick ? "you" : something} #{what[:verb]} #{what[:what].to_sentence}."
   end
 end
 
