@@ -25,7 +25,7 @@ end
 #   say "#{something} #{article} #{what}"
 # end
 
-mention_match /reload!/ do
+mention_match /re(load|boot|set)!/ do
   files = reload!
   reply "I reloaded #{files.map(&:inspect).to_sentence}."
 end
@@ -50,7 +50,7 @@ match /^ping (?<something>.+)/ do
 
   if sites.count > 5
     sites = []
-    reply "Haha, good try, #{nick}.", false
+    reply "Hah. Good try, #{nick}.", false
   end
 
   sites.each do |site|
