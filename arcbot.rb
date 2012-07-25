@@ -48,7 +48,7 @@ end
 match /^ping (?<something>.+)/ do
   sites = something.split(/[, ]+/)
 
-  if site.count > 5
+  if sites.count > 5
     sites = []
     reply "Haha, good try, #{nick}.", false
   end
