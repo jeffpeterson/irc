@@ -14,7 +14,7 @@ module IRC
       if message.middle == self.class.nick
         say something, message.nick
       elsif mention
-        say "#{message.nick}: #{something}", message.middle
+        say "#{message.nick}, #{something}", message.middle
       else
         say something, message.middle
       end
