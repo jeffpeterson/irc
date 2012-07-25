@@ -8,7 +8,7 @@ class Array
     when 2
       "#{self[0]} and #{self[1]}"
     else
-      "#{self[0..-1].join(', ')}, and #{self.last}"
+      "#{self[0..-2].join(', ')}, and #{self.last}"
     end
   end
 end
