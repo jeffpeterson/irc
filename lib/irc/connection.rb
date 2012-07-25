@@ -69,12 +69,14 @@ module IRC
 
     def listen
       unless @listening
-        @listening = true
-        socket.lines "\r\n" do |line|
-          puts "<- " + line
-
-          message = Message.new(line, self)
-          Callback.handle message
+        loop do
+          @listening = true
+          socket.lines "\r\n" do |line|
+            puts "<- " + line
+            message = Message.new(line, self)
+            Callback.handle message
+          end
+          @listening = false
         end
       end
     end
