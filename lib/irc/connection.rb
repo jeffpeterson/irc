@@ -29,6 +29,12 @@ module IRC
       end
     end
 
+    def part *channels
+      channels.flatten.each do |channel|
+        write "PART #{channel}"
+      end
+    end
+
     def nick _nick, realname = nil
       realname ||= _nick
       write "NICK #{_nick}"

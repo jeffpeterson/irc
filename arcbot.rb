@@ -58,8 +58,15 @@ match /^ping (?<something>\S+)/ do
 end
 
 mention_match /join (?<chan>#\S+)/ do
-  connection.join chan
-  reply "I joined #{chan}."
+  
+  connection.join ch = chan.split!(',')
+  reply "I joined #{ch.to_sentence}."
+end
+
+mention_match /part (?<chan>#\S+)/ do
+  connection.write "PART #{chan}"
+  ch = chan.split!(',')
+  reply "I parted #{ch.to_sentence}."
 end
 
 start!
