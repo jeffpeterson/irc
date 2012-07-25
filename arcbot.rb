@@ -39,21 +39,23 @@ mention_match /callbacks( (with )?(?<term>\S+))?/ do
 
   response = ''
   response << "I have #{'callback'.pluralize(callbacks.count)}"
-  response << " matching #{term.inspect}" if term
+  response << " containing #{term.inspect}" if term
   response << "#{': ' + callbacks.to_sentence if callbacks.any?}."
 
   reply response
 end
 
 match /^ping (?<something>\S+)/ do
-  `ping -c1 #{something}`
-  case $?.exitstatus
-  when 0
-    reply "#{something} is up."
-  when 68
-    reply "#{something} is down."
-  else
-    reply "#{something} is not valid."
+  something.split(',').each do |site|
+    `ping -c1 #{site}`
+    case $?.exitstatus
+    when 0
+      reply "#{site} is up."
+    when 68
+      reply "#{site} is down."
+    else
+      reply "#{site} is not valid."
+    end
   end
 end
 
