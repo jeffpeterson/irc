@@ -46,7 +46,14 @@ mention_match /callbacks( (with )?(?<term>\S+))?/ do
 end
 
 match /^ping (?<something>.+)/ do
-  something.split(/[, ]+/).each do |site|
+  sites = something.split(/[, ]+/)
+
+  if site.count > 5
+    sites = []
+    reply "Haha, good try, #{nick}.", false
+  end
+
+  sites.each do |site|
     `ping -c1 #{site}`
     case $?.exitstatus
     when 0
