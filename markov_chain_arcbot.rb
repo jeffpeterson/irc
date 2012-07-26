@@ -1,7 +1,7 @@
 require 'irc'
 
 def add_text text
-  wordlist = text.split
+  wordlist = text.split(/ +/)
 
   wordlist.each_with_index do |word, index|
     add_word(word, wordlist[index + 1]) if index < wordlist.size - 1
