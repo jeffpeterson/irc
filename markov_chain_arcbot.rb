@@ -76,8 +76,8 @@ mention_match /[^1-5]*(?<count>[1-5]) (?<type>sentence|word)(s)?( start(ing)? wi
 
   case type
   when 'sentence'
-    say get_sentences(count, start_word)
+    reply get_sentences(count, start_word), false
   when 'word'
-    say get_words(count, start_word)
+    reply get_words(count, start_word), false
   end
 end
