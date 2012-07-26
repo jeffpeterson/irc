@@ -82,6 +82,10 @@ on :privmsg do
   add_text content
 end
 
+mention_match /random$/i do
+  reply get_sentences
+end
+
 mention_match /[^1-5]*(?<count>[1-5]) (?<type>sentence|word)(s)?( start(ing)? with (?<start>.+))?/ do
   self.count = count.to_i
 
