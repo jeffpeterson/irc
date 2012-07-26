@@ -21,18 +21,20 @@ mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
-match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<what>.+)$/i do
+match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) +((?<del>not|n't) +)?(?<what>.+)$/i do
   self.something, self.verb = nick, 'is' if something.upcase == 'I'
   key = "factoid.#{something}"
-  what.gsub!(/[\.?!]+$/, '')
+  what.gsub!(/[\.!]+ *$/, '')
 
-  temp = false
-  store.transaction do
-    temp = store[key] ||= {verb:verb, what:[]}
-    store[key][:what] << what if !store[key][:what].include?(what)
-    store[key][:what].delete(what) if del
+  if what !~ /\?+ *$/
+    temp = false
+    store.transaction do
+      temp = store[key] ||= {verb:verb, what:[]}
+      store[key][:what] << what if !store[key][:what].include?(what)
+      store[key][:what].delete(what) if del
+    end
+    reply "I stored #{something}: #{temp.inspect}"
   end
-  reply "I stored #{something}: #{temp.inspect}"
 end
 
 mention_match /forget (?<something>.+)/i do
