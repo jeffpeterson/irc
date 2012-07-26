@@ -60,9 +60,12 @@ def get_sentences count = 1, start_word = nil
   word = start_word || random_word
   sentences = ''
   until sentences.count('.') == count
+    if word == ''
+      word = random_word
+      word += '.' if word !~ /[,.?!]$/i
+    end
     sentences << word << ' '
     word = get_word(word)
-    break if word == ''
   end
   sentences.strip.split('. ').map(&:strip).map(&:capitalize).join('. ')
 end
