@@ -19,7 +19,7 @@ def add_word word, next_word
 end
 
 def random_word
-  words = store.get(:markov)
+  words = store.get(:markov_chain)
   words.keys[rand(words.keys.size)]
 end
 
