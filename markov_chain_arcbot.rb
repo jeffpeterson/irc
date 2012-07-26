@@ -24,8 +24,10 @@ def random_word
 end
 
 def get_word word
+  next_word = ''
+
   store.transaction do
-    store.abort and return '' if !store[:markov_chain][word]
+    store.abort if !store[:markov_chain][word]
     followers = store[:markov_chain][word]
     sum = followers.inject(0) {|sum,kv| sum += kv[1]}
     random = rand(sum) + 1
@@ -56,6 +58,7 @@ def get_sentences count = 1, start_word = nil
   sentences = ''
   until sentences.count('.') == count
     sentences << word << ' '
+    prev_length = sentences.length
     word = get_word(word)
   end
   sentences.strip.split('. ').map(&:strip).map(&:capitalize).join('. ')
