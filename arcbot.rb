@@ -15,7 +15,7 @@ host  'dot'
 port  6669
 
 nick    'arcbot'
-channel '#test'
+channel '#test', '#geekboy'
 
 mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
