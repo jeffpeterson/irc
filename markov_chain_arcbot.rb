@@ -28,6 +28,8 @@ def get_word word
 
   store.transaction do
     store.abort if !store[:markov_chain][word]
+
+    puts "getting word"
     followers = store[:markov_chain][word]
     sum = followers.inject(0) {|sum,kv| sum += kv[1]}
     random = rand(sum) + 1
@@ -37,6 +39,7 @@ def get_word word
       partial_sum += count
       partial_sum >= random
     end.first
+    puts next_word
 
     next_word
   end
