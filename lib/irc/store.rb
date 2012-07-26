@@ -1,9 +1,14 @@
 require 'pstore'
+require 'thread'
 
 module IRC
   module Store
     class << self
       attr_accessor :store, :name
+
+      def mutex
+        @mutex ||= Mutex.new
+      end
 
       def name
         @name ||= 'irc_bot.pstore'
@@ -14,14 +19,20 @@ module IRC
       end
 
       def get key
-        store.transaction do
+        transaction do
           store[key]
         end
       end
 
       def set key, value
-        store.transaction do
+        transaction do
           store[key] = value
+        end
+      end
+
+      def transaction *args, &block
+        mutex.synchronize do
+          store.transaction *args, &block
         end
       end
 

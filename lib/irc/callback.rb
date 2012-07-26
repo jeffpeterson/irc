@@ -11,13 +11,13 @@ module IRC
 
     def call! message
       if match = @regex.match(message.content)
+        (class << message; self; end).send :attr_accessor, *@regex.names
         @regex.names.each do |name|
-          (class << message; self; end).send :define_method, name do 
-            match[name]
-          end
+          message.instance_variable_set("@#{name}", match[name])
         end
 
         Thread.new do
+        # begin
           if @factory
             @factory.new(message).instance_eval(&@block)
           else

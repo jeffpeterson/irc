@@ -12,7 +12,7 @@ def reload!
 end
 
 host  'dot'
-port  6667
+port  6669
 
 nick    'arcbot'
 channel '#test'
@@ -21,35 +21,36 @@ mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
-match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<what>.+)[^?]*$/i do
-  something, verb = nick, 'is' if something.upcase == 'I'
+match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<what>.+)$/i do
+  self.something, self.verb = nick, 'is' if something.upcase == 'I'
   key = "factoid.#{something}"
+  what.gsub!(/[\.?!]+$/, '')
 
   store.transaction do
     store[key] ||= {verb:verb, what:[]}
     store[key][:what] << what if !store[key][:what].include?(what)
     store[key][:what].delete(what) if del
   end
-  reply store.get(key).inspect
 end
 
 mention_match /forget (?<something>.+)/i do
-  store.set "factoid.#{something}", nil
+  store.transaction do
+    store.delete "factoid.#{something}"
+  end
+
   reply "I forgot #{something}."
 end
 
 mention_match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
-  s = something
-  s = nick if something.downcase == 'i'
-  what = store["factoid.#{s}"]
-  if !!what
-    if s != nick
-      reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
-    else
-      reply "you are #{what[:what].to_sentence}."
-    end
+  self.something = nick if something.upcase == 'I'
+  what = store.get("factoid.#{something}")
+
+  if !what
+    reply %{I don't know anything about #{something}.}
+  elsif something == nick
+    reply "you are #{what[:what].to_sentence}."
   else
-    reply %{I'm sorry, I have not heard of this, "#{something}", you speak of.}
+    reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
   end
 end
 

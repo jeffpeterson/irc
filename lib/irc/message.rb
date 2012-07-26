@@ -1,7 +1,5 @@
 module IRC
   class Message
-    attr_accessor :connection
-
     REGEX = /^
       (:
         (?<prefix>
@@ -21,41 +19,28 @@ module IRC
       \r\n$
     /xi
 
-    REGEX.names.each do |name|
-      define_method name do 
-        eval("@#{name} ||= self['#{name}']")
-      end
-
-      define_method "#{name}=" do |value|
-        instance_variable_set("@#{name}", value)
-      end
-    end
-
+    attr_reader   :raw
+    attr_accessor :connection
+    attr_accessor *REGEX.names
 
     def initialize message_string, connection
+      @raw = message_string
+
       @connection = connection
       @match = REGEX.match(message_string) || {}
-      @raw = message_string
-    end
 
-    def [] key
-      @match[key.to_s]
-    end
+      REGEX.names.each do |name|
+        instance_variable_set("@#{name}", @match[name])
+      end
 
-    def inspect
-      @match.names.map{|n| "#{n}: #{@match[n].inspect}"}.join(", ")
     end
 
     def action
-      @action ||= (command || '').downcase.to_sym
+      @action ||= (command || '').downcase.intern
     end
 
     def content
       @content ||= trailing || middle
-    end
-
-    def raw
-      @raw
     end
   end # class Message
 end

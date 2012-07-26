@@ -24,6 +24,15 @@ module IRC
       IRC::Store
     end
 
+    def conjugate noun, lookup = nil
+      lookup ||= {
+        'me'  => nick, 
+        'you' => self.class.nick,
+        nick  => 'you'
+      }
+      noun.gsub /[\w]+/i, lookup
+    end
+
     def method_missing method_name, *args
       message.public_send method_name, *args
     end
