@@ -65,7 +65,7 @@ def get_sentences count = 1, start_word = nil
     sentences << '.' if word !~ /[,.?!]$/i
     word = get_word(word)
   end
-  sentences.strip.split(/[ .]+/).map(&:strip).map(&:capitalize).join('. ')
+  sentences.strip.split(/[ \.]+/).map(&:strip).map(&:capitalize).join('. ')
 end
 
 on :privmsg do
