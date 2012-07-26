@@ -88,7 +88,7 @@ match /^ping (?<something>.+)/ do
 
   if sites.count > 5
     sites = []
-    reply "Hah. Good try, #{nick}.", false
+    reply "I can't do that, #{nick}.", false
   end
 
   sites.each do |site|
@@ -96,10 +96,8 @@ match /^ping (?<something>.+)/ do
     case $?.exitstatus
     when 0
       reply "#{site} is up."
-    when 68
-      reply "#{site} is down."
     else
-      reply "#{site} is not valid."
+      reply "#{site} is down."
     end
   end
 end
