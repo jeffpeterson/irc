@@ -72,6 +72,8 @@ on :privmsg do
 end
 
 mention_match /[^1-5]*(?<count>[1-5]) (?<type>(sentence|word)(s)?)( start(ing)? with (?<start_word>\w+))?/ do
+  count = count.to_i
+
   case type
   when 'sentence'
     say get_sentences(count, start_word)
