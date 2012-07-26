@@ -44,6 +44,7 @@ end
 mention_match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   self.something = nick if something.upcase == 'I'
   what = store.get("factoid.#{something}")
+  reply what.inspect
 
   if !what
     reply %{I don't know anything about #{something}.}
