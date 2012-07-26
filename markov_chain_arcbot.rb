@@ -2,6 +2,7 @@ require 'irc'
 
 def add_text text
   wordlist = text.split
+
   wordlist.each_with_index do |word, index|
     add_word(word, wordlist[index + 1]) if index < wordlist.size - 1
   end
@@ -29,7 +30,6 @@ def get_word word
   store.transaction do
     store.abort if !store[:markov_chain][word]
 
-    puts "getting word"
     followers = store[:markov_chain][word]
     sum = followers.inject(0) {|sum,kv| sum += kv[1]}
     random = rand(sum) + 1
@@ -39,14 +39,14 @@ def get_word word
       partial_sum += count
       partial_sum >= random
     end.first
-    puts next_word
-
-    next_word
   end
+
+  next_word
 end
 
 def get_words count = 1, start_word = nil
   sentence = ''
+
   word = start_word || random_word
   count.times do
     sentence << word << ' '
@@ -61,8 +61,8 @@ def get_sentences count = 1, start_word = nil
   sentences = ''
   until sentences.count('.') == count
     sentences << word << ' '
-    prev_length = sentences.length
     word = get_word(word)
+    break if word == ''
   end
   sentences.strip.split('. ').map(&:strip).map(&:capitalize).join('. ')
 end
@@ -71,8 +71,8 @@ on :privmsg do
   add_text content
 end
 
-mention_match /[^1-5]*(?<count>[1-5]) (?<type>(sentence|word)(s)?)( start(ing)? with (?<start_word>\w+))?/ do
-  count = count.to_i
+mention_match /[^1-5]*(?<count>[1-5]) (?<type>sentence|word)(s)?( start(ing)? with (?<start_word>\w+))?/ do
+  self.count = count.to_i
 
   case type
   when 'sentence'
