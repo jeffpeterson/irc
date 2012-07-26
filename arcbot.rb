@@ -33,7 +33,7 @@ match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) +((?<del>not|n't) +)?(?<wha
       store[key][:what] << what if !store[key][:what].include?(what)
       store[key][:what].delete(what) if del
     end
-    reply "I stored #{something}: #{temp.inspect}"
+    # reply "I stored #{something}: #{temp.inspect}"
   end
 end
 
@@ -56,7 +56,7 @@ mention_match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   else
     reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
   end
-  reply "I read #{something}: #{what.inspect}"
+  # reply "I read #{something}: #{what.inspect}"
 end
 
 mention_match /re(?<verb>load|boot|set)!/ do
