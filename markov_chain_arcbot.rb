@@ -59,7 +59,7 @@ end
 def get_sentences count = 1, start_word = nil
   word = start_word || random_word
   sentences  = []
-  until sentences.count > count
+  until sentences.count >= count
     sentences << []
     word = word.strip
     until word.empty?
@@ -82,7 +82,7 @@ on :privmsg do
   add_text content
 end
 
-mention_match /[^1-5]*(?<count>[1-5]) (?<type>sentence|word)(s)?( start(ing)? with (?<start>\w+))?/ do
+mention_match /[^1-5]*(?<count>[1-5]) (?<type>sentence|word)(s)?( start(ing)? with (?<start>.+))?/ do
   self.count = count.to_i
 
   case type
