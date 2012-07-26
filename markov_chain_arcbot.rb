@@ -58,18 +58,24 @@ end
 
 def get_sentences count = 1, start_word = nil
   word = start_word || random_word
-  sentences = ''
-  until sentences.count('.') == count
-    sentences << word << ' '
-
-    if word == ''
-      word = random_word
-      sentences << word << '.' if word !~ /[,.?!]$/i
+  sentences  = []
+  until sentences.count > count
+    sentences << []
+    word = word.strip
+    until word.empty?
+      sentences.last << word
+      word = get_word(word)
     end
 
-    word = get_word(word)
+    word = random_word
   end
-  sentences.strip.split('.').map(&:strip).map(&:capitalize).join('. ')
+
+  sentences.map! do |s|
+    s = s.join(' ').capitalize
+    s << '.' if s !~ /[\.?!]+$/i
+  end
+
+  sentences.join(' ')
 end
 
 on :privmsg do
