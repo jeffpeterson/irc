@@ -27,10 +27,11 @@ match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<wha
   what.gsub!(/[\.?!]+$/, '')
 
   store.transaction do
-    store[key] ||= {verb:verb, what:[]}
+    temp = store[key] ||= {verb:verb, what:[]}
     store[key][:what] << what if !store[key][:what].include?(what)
     store[key][:what].delete(what) if del
   end
+  reply "I stored #{something}: #{temp.inspect}"
 end
 
 mention_match /forget (?<something>.+)/i do
@@ -44,7 +45,6 @@ end
 mention_match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   self.something = nick if something.upcase == 'I'
   what = store.get("factoid.#{something}")
-  reply what.inspect
 
   if !what
     reply %{I don't know anything about #{something}.}
@@ -53,6 +53,7 @@ mention_match /wh(at|o) (is|are|am) (?<something>.+)\?/i do
   else
     reply "#{something} #{what[:verb]} #{what[:what].to_sentence}."
   end
+  reply "I read #{something}: #{what.inspect}"
 end
 
 mention_match /re(?<verb>load|boot|set)!/ do
