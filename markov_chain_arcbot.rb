@@ -7,9 +7,13 @@ def add_text text
   end
 end
 
+IRC::Store.transaction do
+  IRC::Store[:markov_chain] = Hash.new unless IRC::Store.root?(:markov_chain)
+end
+
 def add_word word, next_word
   store.transaction do
-    (store[:markov_chain] ||= Hash.new)[word] = Hash.new(0) if !store[:markov_chain][word]
+    store[:markov_chain][word] = Hash.new(0) if !store[:markov_chain][word]
     store[:markov_chain][word][next_word] += 1
   end
 end
