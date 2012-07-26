@@ -65,11 +65,11 @@ on :privmsg do
   add_text content
 end
 
-mention_match /(\D*)(?<count>[1-5]) (?<type>(sentence|word)(s)?)( start(ing)? with (?<start_word>\w+))?/ do
+mention_match /[^1-5]*(?<count>[1-5]) (?<type>(sentence|word)(s)?)( start(ing)? with (?<start_word>\w+))?/ do
   case type
-  when 'sentences'
+  when 'sentence'
     say get_sentences(count, start_word)
-  when 'words'
+  when 'word'
     say get_words(count, start_word)
   end
 end
