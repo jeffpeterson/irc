@@ -47,7 +47,7 @@ def get_words count = 1, start_word = nil
   sentence.strip.gsub(/[^A-Za-z\s]/, '')
 end
 
-def get_sentences count = 1, start_word = nil)
+def get_sentences count = 1, start_word = nil
   word = start_word || random_word
   sentences = ''
   until sentences.count('.') == count
