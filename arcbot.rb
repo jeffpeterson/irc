@@ -26,6 +26,7 @@ match /(?<something>[^\.,!\?:]+) +(?<verb>is|are|am) *((?<del>not|n't) +)?(?<wha
   key = "factoid.#{something}"
   what.gsub!(/[\.?!]+$/, '')
 
+  temp = false
   store.transaction do
     temp = store[key] ||= {verb:verb, what:[]}
     store[key][:what] << what if !store[key][:what].include?(what)
