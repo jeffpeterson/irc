@@ -52,7 +52,7 @@ def get_sentences count = 1, start_word = nil
   end
 
   sentences.map! do |s|
-    s = s.slice(0,1).upcase + s.slice(1..-1)
+    s[0] = s[0].upcase
     s << '.' if s !~ /[\.?!]+$/i
   end
 
