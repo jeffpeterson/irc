@@ -68,6 +68,10 @@ mention_match /random$/i do
   reply get_sentence
 end
 
+mention_match /markov words/i do
+  reply "I've learned #{store.scard('words:for:markov')} words."
+end
+
 mention_match /[^1-5]*(?<count>[1-5]) *(?<type>sentence)s?( +start(ing)? +with +(?<start>.+ .+))?/ do
   self.count = self.count.to_i
 
