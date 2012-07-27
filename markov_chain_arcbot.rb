@@ -3,10 +3,11 @@ require 'irc'
 def add_text text
   wordlist = text.split(/ +/)
 
-  0.upto wordlist.length - 3  do |i|
-    chunk = wordlist[i,i + 1].join(' ')
-    puts "#{chunk.inspect} => #{wordlist[i+2].inspect}"
-    add_word chunk, wordlist[i + 2]
+  (wordlist.length - 2).times do |i|
+    key   = wordlist[i,2].join(' ')
+    value = wordlist[i + 2]
+
+    add_word key, value
   end
 end
 
@@ -22,40 +23,35 @@ end
 
 def get_word word
   # store.srandmember word
-  index = rand(store.zcard(word))
-  store.zrange(word, index, index)
+  index = store.zcard(word)
+  return nil if index.zero?
+
+  index = rand(index)
+  store.zrange(word, index, index).first
 end
 
-def get_words count = 1, start_word = nil
-  sentence = []
+def get_sentence start_word = nil
+  word           = start_word || random_word
+  sentence_array = word.split
 
-  word = start_word || random_word
-  count.times do
-    sentence << word
-    word = get_word(word)
+  max   = 30
+  count = 0
+
+  while count < max && word = get_word(sentence_array[-2,2].join(' ')) do
+    sentence_array << word
+    count += 1
   end
 
-  sentence.strip.gsub(/[^A-Za-z\s]/, '')
+  sentence = sentence_array.join(' ')
+  # sentence[0] = sentence[0].upcase
+  sentence << '.' if sentence !~ /[\.?!]+$/i
+  sentence
 end
 
 def get_sentences count = 1, start_word = nil
-  word = start_word || random_word
-  sentences  = []
-  until sentences.count >= count
-    sentences << []
-
-    while word
-      sentences.last << word
-      word = get_word(word)
-    end
-
-    word = random_word
-  end
-
-  sentences.map! do |s|
-    s = s.join(' ')
-    s[0] = s[0].upcase
-    s << '.' if s !~ /[\.?!]+$/i
+  sentences  = [get_sentence(start_word)]
+  (count - 1).times do
+    sentences << get_sentence
   end
 
   sentences.join(' ')
@@ -63,20 +59,18 @@ end
 
 on :privmsg do
   add_text content
+  reply get_sentences(2) if rand(100) < 3
 end
 
 mention_match /random$/i do
-  reply get_sentences
+  reply get_sentence
 end
 
-mention_match /[^1-5]*(?<count>[1-5]) (?<type>sentence|word)(s)?( start(ing)? with (?<start>.+))?/ do
-  self.count = count.to_i
-  self.start = nil if start !~ / /
+mention_match /[^1-5]*(?<count>[1-5]) *(?<type>sentence)s?( +start(ing)? +with +(?<start>.+ .+))?/ do
+  self.count = self.count.to_i
 
   case type
   when 'sentence'
     reply get_sentences(count, start), false
-  when 'word'
-    reply get_words(count, start), false
   end
 end
