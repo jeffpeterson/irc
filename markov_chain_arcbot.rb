@@ -61,7 +61,7 @@ end
 
 on :privmsg do
   add_text content
-  reply get_sentences(2) if rand(300) < 1
+  # reply get_sentences(2) if rand(300) < 1
 end
 
 mention_match /random$/i do
