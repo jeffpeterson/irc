@@ -21,7 +21,7 @@ module IRC
     end
 
     def store
-      IRC::Store
+      IRC::Store.store
     end
 
     def conjugate noun, lookup = nil
@@ -69,6 +69,15 @@ module IRC
       def nick _nick = nil
         puts "   nick: '#{_nick}'"  if _nick
         @nick = _nick || @nick
+      end
+
+      def store _store, options = nil
+        require 'irc/store'
+
+        case _store
+        when :redis
+          IRC::Store.options = options
+        end
       end
 
       def channel *_channels

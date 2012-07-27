@@ -17,6 +17,8 @@ port  6669
 nick    'arcbot'
 channel '#test', '#geekboy'
 
+store :redis, :host => 'localhost', :port => 6380
+
 mention_match /time/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end

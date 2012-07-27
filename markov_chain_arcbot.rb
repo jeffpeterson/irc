@@ -3,53 +3,34 @@ require 'irc'
 def add_text text
   wordlist = text.split(/ +/)
 
-  wordlist.each_with_index do |word, index|
-    add_word(word, wordlist[index + 1]) if index < wordlist.size - 1
+  0.upto wordlist.length - 3  do |i|
+    chunk = wordlist[i,i + 1].join(' ')
+    add_word chunk, wordlist[i + 2]
   end
-end
-
-IRC::Store.transaction do
-  IRC::Store[:markov_chain] = Hash.new unless IRC::Store.root?(:markov_chain)
 end
 
 def add_word word, next_word
-  store.transaction do
-    store[:markov_chain][word] = Hash.new(0) if !store[:markov_chain][word]
-    store[:markov_chain][word][next_word] += 1
-  end
+  # store.sadd word, next_word # add the word to redis
+  store.zincrby word, 1, next_word
+  store.sadd "words:for:markov", word
 end
 
 def random_word
-  words = store.get(:markov_chain)
-  words.keys[rand(words.keys.size)]
+  store.srandmember "words:for:markov"
 end
 
 def get_word word
-  next_word = ''
-
-  store.transaction do
-    store.abort if !store[:markov_chain][word]
-
-    followers = store[:markov_chain][word]
-    sum = followers.inject(0) {|sum,kv| sum += kv[1]}
-    random = rand(sum) + 1
-    partial_sum = 0
-
-    next_word = followers.find do |word, count|
-      partial_sum += count
-      partial_sum >= random
-    end.first
-  end
-
-  next_word
+  # store.srandmember word
+  index = rand(store.zcard)
+  store.zrange(word, index, index)
 end
 
 def get_words count = 1, start_word = nil
-  sentence = ''
+  sentence = []
 
   word = start_word || random_word
   count.times do
-    sentence << word << ' '
+    sentence << word
     word = get_word(word)
   end
 
@@ -61,8 +42,8 @@ def get_sentences count = 1, start_word = nil
   sentences  = []
   until sentences.count >= count
     sentences << []
-    word = word.strip
-    until word.empty?
+
+    while word
       sentences.last << word
       word = get_word(word)
     end
@@ -71,7 +52,7 @@ def get_sentences count = 1, start_word = nil
   end
 
   sentences.map! do |s|
-    s = s.join(' ').capitalize
+    s = s.slice(0,1).upcase + s.slice(1..-1)
     s << '.' if s !~ /[\.?!]+$/i
   end
 
@@ -88,6 +69,7 @@ end
 
 mention_match /[^1-5]*(?<count>[1-5]) (?<type>sentence|word)(s)?( start(ing)? with (?<start>.+))?/ do
   self.count = count.to_i
+  self.start = nil if start !~ / /
 
   case type
   when 'sentence'

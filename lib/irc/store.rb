@@ -1,44 +1,24 @@
-require 'pstore'
-require 'thread'
+require 'redis'
 
 module IRC
-  module Store
+  class Store
+    attr_reader :store
+
+    def initialize options = {}
+      options = {:host => 'localhost', :port => 6379}.merge(options)
+      @store = Redis.new options
+    end
+
+    def method_missing method_name, *args, &block
+      store.send method_name, *args, &block
+    end
+
     class << self
-      attr_accessor :store, :name
-
-      def mutex
-        @mutex ||= Mutex.new
-      end
-
-      def name
-        @name ||= 'irc_bot.pstore'
-      end
-
+      attr_accessor :options
       def store
-        @store ||= PStore.new name
+        @store ||= self.new options
       end
 
-      def get key
-        transaction do
-          store[key]
-        end
-      end
-
-      def set key, value
-        transaction do
-          store[key] = value
-        end
-      end
-
-      def transaction *args, &block
-        mutex.synchronize do
-          store.transaction *args, &block
-        end
-      end
-
-      def method_missing method_name, *args, &block
-        store.send method_name, *args, &block
-      end
     end
   end
 end
