@@ -43,7 +43,7 @@ def get_sentence start_word = nil
   end
 
   sentence = sentence_array.join(' ')
-  # sentence[0] = sentence[0].upcase
+  sentence[0] = sentence[0].upcase
   sentence << '.' if sentence !~ /[\.?!]+$/i
   sentence
 end
@@ -59,7 +59,7 @@ end
 
 on :privmsg do
   add_text content
-  reply get_sentences(2) if rand(100) < 3
+  reply get_sentences(2) if rand(100) < 1
 end
 
 mention_match /random$/i do
