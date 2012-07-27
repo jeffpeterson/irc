@@ -17,7 +17,7 @@ module IRC
 
     def write *strings
       strings.each do |string|
-        puts '-> ' + string
+        puts '<- ' + string
         socket.print string + "\r\n"
       end
     end
@@ -73,7 +73,6 @@ module IRC
         loop do
           @listening = true
           socket.lines "\r\n" do |line|
-            puts "<- " + line
             message = Message.new(line, self)
             Callback.handle message
           end

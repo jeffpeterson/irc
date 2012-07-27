@@ -5,6 +5,7 @@ def add_text text
 
   0.upto wordlist.length - 3  do |i|
     chunk = wordlist[i,i + 1].join(' ')
+    puts "#{chunk.inspect} => #{wordlist[i+2].inspect}"
     add_word chunk, wordlist[i + 2]
   end
 end
