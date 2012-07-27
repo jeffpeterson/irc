@@ -21,7 +21,7 @@ end
 
 def get_word word
   # store.srandmember word
-  index = rand(store.zcard)
+  index = rand(store.zcard(word))
   store.zrange(word, index, index)
 end
 
