@@ -34,7 +34,7 @@ def get_sentence start_word = nil
   word           = start_word || random_word
   sentence_array = word.split
 
-  sentence_array += random_word.split while sentence_array.count <= 2
+  sentence_array = random_word.split while sentence_array.count < 2
 
   max   = 30
   count = 0
