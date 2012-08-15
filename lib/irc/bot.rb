@@ -92,7 +92,7 @@ module IRC
       end
 
       def mention_match regex, &block
-        r = /^#{@nick}(.*)/ + regex
+        r = /^#{@nick}[,: ]*/ + regex
         on(:privmsg, r, &block)
       end
 

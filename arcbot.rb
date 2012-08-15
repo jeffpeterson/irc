@@ -104,22 +104,65 @@ match /^ping (?<something>.+)/ do
   end
 end
 
+match /^(?<kind>md5|sha1|sha2) (?<something>.+)/i do
+  require 'digest'
+
+  case kind.downcase
+  when 'md5'
+    reply Digest::MD5.hexdigest(something)
+  when 'sha1'
+    reply Digest::SHA1.hexdigest(something)
+  when 'sha2'
+    reply Digest::SHA2.hexdigest(something)
+  end
+end
+
 mention_match /join (?<chan>.+)/ do
   ch = chan.split(/[, ]+/)
   connection.join ch
   reply "I joined #{ch.to_sentence}."
 end
 
-mention_match /(?<verb>part|leave) (?<chan>.+)/ do
-  ch, rejected = chan.split(/[, ]+/).partition {|c| c[0] == "#" && !self.class.channels.include?(c) }
-  connection.part ch
+mention_match /(?<verb>part|leave) (?<chans>.+)/ do
+  self.chans, rejected = chans.split(/[, ]+/).partition {|c| c[0] == "#" && !self.class.channels.include?(c) }
+  connection.part chans
 
-  reply "I #{verb == 'leave' ? 'left' : 'parted'} #{ch.to_sentence}." if ch.any?
-  reply "I'm sorry, I'm configured not to #{verb} #{rejected.to_sentence}." if rejected.any?
+  reply "I #{verb == 'leave' ? 'left' : 'parted'} #{chans.to_sentence}." if chans.any?
+  reply "I'm configured not to #{verb} #{rejected.to_sentence}." if rejected.any?
 end
 
 match /bot roll call/i do
   reply "arcbots, roll out!", false
+end
+
+match /!meeting( +(?<meth>\w+)( +(?<item>.*))?)?/i do
+  self.item = nil if item && item.empty?
+
+  case meth
+  when 'pop'
+    store.rpop('meeting')
+  when 'push'
+    store.rpush('meeting', item) if item
+  when 'shift'
+    store.lpop('meeting')
+  when 'unshift'
+    store.lpush('meeting', item) if item
+  when /\d+/
+    store.lset 'meeting', meth.to_i - 1, item if item
+  else
+    store.rpush('meeting', "#{meth} #{item}") if item
+  end
+    reply store.lrange('meeting', 0, -1).each_with_index.map {|item,i| "#{'%2d' % (i + 1)}. #{item}"}.join(' | ')
+end
+
+mention_match /(?<something>[^=]+) (?<del>!)?=( (?<string>.*))?$/ do
+  if del
+    store.hdel(something)
+    reply "I deleted #{something.inspect}."
+  elsif string
+    store.hset "callbacks", something, string
+    reply "I will respond to #{something.inspect} by evaluating #{string.inspect}."
+  end
 end
 
 start!

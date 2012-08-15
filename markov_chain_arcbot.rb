@@ -80,3 +80,4 @@ mention_match /[^1-5]*(?<count>[1-5]) *(?<type>sentence)s?( +start(ing)? +with +
     reply get_sentences(count, start), false
   end
 end
+
