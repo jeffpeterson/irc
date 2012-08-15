@@ -1,6 +1,6 @@
 require 'irc'
 
-match /(?<everything>.+)/ do
+match /^(?!!kotw)(?<everything>.+)/ do
   words = everything.split(/ +/)
   words.each do |word|
     store('kotw:word').zincrby word, 1, nick
