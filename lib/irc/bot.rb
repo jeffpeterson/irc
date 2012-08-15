@@ -6,6 +6,10 @@ module IRC
       @message = message
     end
 
+    def stop
+      Thread.current.kill
+    end
+
     def say something, recipients = nil
       message.connection.privmsg something, recipients || self.class.channels
     end

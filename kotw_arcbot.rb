@@ -24,7 +24,3 @@ match /^!kotw +(?<word>[^ ]+)/ do
     reply "#{king} is the king of '#{word}' and has said it #{'time'.pluralize(score.to_i)}.", false
   end
 end
-
-mention_match /kotw count/ do
-
-end

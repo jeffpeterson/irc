@@ -165,4 +165,6 @@ mention_match /(?<something>[^=]+) (?<del>!)?=( (?<string>.*))?$/ do
   end
 end
 
+@reloaded ||= reload!
+
 start!
