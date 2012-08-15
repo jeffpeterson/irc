@@ -3,20 +3,19 @@ require 'irc'
 match /^(?!!kotw)(?<everything>.+)/ do
   words = everything.split(/ +/)
   words.each do |word|
-    store('kotw:word').zincrby word, 1, nick
+    store('kotw:word').zincrby word, 1, user
   end
 end
 
-match /^!kotw +(?<word>.+)$/ do
-  scores = store('kotw:word').zrevrange(word, 0, 2, with_scores: true)
+# match /^!kotw +(?<word>.+)$/ do
+#   scores = store('kotw:word').zrevrange(word, 0, 2, with_scores: true)
 
-  if !scores
-    reply "I haven't seen anybody say '#{word}'."
-    scores = []
-  end
+#   if !scores
+#     reply "I haven't seen anybody say '#{word}'."
+#   end
 
-  scores.each do |tuple|
-    who, score = tuple
-    reply "#{who} has said '#{word}' #{'time'.pluralize(score.to_i)}.", false
-  end
-end
+#   scores.each do |tuple|
+#     who, score = tuple
+#     reply "#{who} has said '#{word}' #{'time'.pluralize(score.to_i)}.", false
+#   end
+# end
