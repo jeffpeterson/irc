@@ -20,8 +20,8 @@ module IRC
       end
     end
 
-    def store
-      IRC::Store.store
+    def store *args
+      IRC::Store.store *args
     end
 
     def conjugate noun, lookup = nil

@@ -1,4 +1,5 @@
 require 'redis'
+require 'redis-namespace'
 
 module IRC
   class Store
@@ -15,10 +16,12 @@ module IRC
 
     class << self
       attr_accessor :options
-      def store
+      def store namespace = nil
         @store ||= self.new options
-      end
 
+        return Redis::Namespace.new(namespace, redis: @store) if namespace
+        @store
+      end
     end
   end
 end

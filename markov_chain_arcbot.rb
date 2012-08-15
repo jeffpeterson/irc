@@ -1,33 +1,37 @@
 require 'irc'
 
+KEY_LENGTHS = (2..10)
+
 def add_text text
   wordlist = text.split(/ +/)
 
-  (wordlist.length - 2).times do |i|
-    key   = wordlist[i,2].join(' ')
-    value = wordlist[i + 2]
+  KEY_LENGTHS.each do |key_length|
+    (wordlist.length - key_length).times do |i|
+      key   = wordlist[i,key_length].join(' ')
+      value = wordlist[i + key_length]
 
-    add_word key, value
+      add_word key, value
+    end
   end
 end
 
 def add_word word, next_word
-  # store.sadd word, next_word # add the word to redis
-  store.zincrby word, 1, next_word
-  store.sadd "words:for:markov", word
+  store.multi do
+    store('markov:word').zincrby word, 1, next_word
+    store('markov').sadd 'words', word
+  end
 end
 
 def random_word
-  store.srandmember "words:for:markov"
+  store('markov').srandmember 'words'
 end
 
 def get_word word
-  # store.srandmember word
-  index = store.zcard(word)
+  index = store('markov:word').zcard(word)
   return nil if index.zero?
 
   index = rand(index)
-  store.zrange(word, index, index).first
+  store('markov:word').zrange(word, index, index).first
 end
 
 def get_sentence start_word = nil
@@ -69,7 +73,7 @@ mention_match /random$/i do
 end
 
 mention_match /markov words/i do
-  reply "I've learned #{store.scard('words:for:markov')} words."
+  reply "I've learned #{store('markov').scard('words')} words."
 end
 
 mention_match /[^1-5]*(?<count>[1-5]) *(?<type>sentence)s?( +start(ing)? +with +(?<start>.+ .+))?/ do
