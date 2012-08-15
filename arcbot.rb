@@ -167,4 +167,4 @@ end
 
 start!
 
-@reloaded ||= self.new.reload!
+@reloaded ||= self.new(Message.new("")).reload!
