@@ -14,5 +14,5 @@ match /^!kotw +(?<word>.+)$/ do
 
   king, score = scores.first
 
-  reply "#{king} is the king of '#{word}' (#{score}).", false
+  reply "#{king} is the king of '#{word}' (#{score.to_i}).", false
 end
