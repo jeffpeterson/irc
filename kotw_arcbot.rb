@@ -10,6 +10,7 @@ end
 match /^!kotw +(?<word>.+)$/ do
   scores = store('kotw:word').zrevrange(word, 0, 2, with_scores: true)
   scores.each do |tuple|
-    reply ""
+    who, score = tuple
+    reply "#{who} has said '#{word}' #{'time'.pluralize(score)}.", false
   end
 end
