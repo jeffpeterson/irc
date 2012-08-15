@@ -4,7 +4,7 @@ module IRC
       (:
         (?<prefix>
           (
-            (?<servername>(?<nick>[a-z][a-z0-9\-\[\]\\`\^\{\}\.]*))
+            (?<servername>(?<nick>[a-z][a-z0-9_\-\[\]\\`\^\{\}\.\|]*))
           )
           (!(?<user>[a-z0-9~\.]+))?
           (@(?<host>[a-z0-9\.]+))?
