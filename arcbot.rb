@@ -167,4 +167,4 @@ end
 
 start!
 
-@reloaded ||= reload!
+@reloaded ||= self.new.reload!
