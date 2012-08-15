@@ -16,10 +16,8 @@ def add_text text
 end
 
 def add_word word, next_word
-  store.multi do
-    store('markov:word').zincrby word, 1, next_word
-    store('markov').sadd 'words', word
-  end
+  store('markov:word').zincrby word, 1, next_word
+  store('markov').sadd 'words', word
 end
 
 def random_word
