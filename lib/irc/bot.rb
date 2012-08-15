@@ -20,8 +20,14 @@ module IRC
       end
     end
 
-    def store *args
-      IRC::Store.store *args
+    def store namespace = nil
+      @store ||= IRC::Store.store
+
+      if namespace
+        (@namespace ||= {})[namespace] ||= Redis::Namespace.new(namespace, redis: @store)
+      else
+        @store
+      end
     end
 
     def conjugate noun, lookup = nil

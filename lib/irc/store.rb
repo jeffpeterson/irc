@@ -16,11 +16,8 @@ module IRC
 
     class << self
       attr_accessor :options
-      def store namespace = nil
-        @store ||= self.new options
-
-        return Redis::Namespace.new(namespace, redis: @store) if namespace
-        @store
+      def store
+        self.new options
       end
     end
   end
