@@ -155,17 +155,19 @@ match /!meeting( +(?<meth>\w+)( +(?<item>.*))?)?/i do
     reply store.lrange('meeting', 0, -1).each_with_index.map {|item,i| "#{'%2d' % (i + 1)}. #{item}"}.join(' | ')
 end
 
-mention_match /(?<something>[^=]+) (?<del>!)?=( (?<string>.*))?$/ do
-  if del
-    store.hdel(something)
-    reply "I deleted #{something.inspect}."
-  elsif string
-    store.hset "callbacks", something, string
-    reply "I will respond to #{something.inspect} by evaluating #{string.inspect}."
-  end
-end
+# mention_match /(?<something>[^=]+) (?<del>!)?=( (?<string>.*))?$/ do
+#   if del
+#     store.hdel(something)
+#     reply "I deleted #{something.inspect}."
+#   elsif string
+#     store.hset "callbacks", something, string
+#     reply "I will respond to #{something.inspect} by evaluating #{string.inspect}."
+#   end
+# end
 
-@reloaded ||= self.new(IRC::Message.new("")).reload!
+Dir.glob("*bot.rb").each do |file|
+  load file if file != __FILE__
+end
 
 start!
 
