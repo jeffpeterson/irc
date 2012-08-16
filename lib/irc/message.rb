@@ -16,7 +16,7 @@ module IRC
         (\ +(?<middle>[^:\r\n\ ][^\r\n\ ]*))*
         (\ *:(?<trailing>.+))?
       )
-      \r?\n$
+      \r\n$
     /xi
 
     attr_reader   :raw
