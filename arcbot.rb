@@ -165,6 +165,7 @@ mention_match /(?<something>[^=]+) (?<del>!)?=( (?<string>.*))?$/ do
   end
 end
 
+@reloaded ||= self.new(IRC::Message.new("")).reload!
+
 start!
 
-@reloaded ||= self.new(Message.new("")).reload!
