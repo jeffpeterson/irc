@@ -7,15 +7,15 @@ require 'irc'
 
 host    'localhost'
 nick    'MyBot'
-channel '#MyChannel'
+channel '#MyChannel', '#OtherChannel'
 
 # Say hi when somebody joins the channel:
 on :join do
-  say "Hi #{nick}!" if nick != 'MyBot'
+  say "Hi #{nick}!"
 end
 
 # Tell the time and date:
-match /!time/ do
+match /^!(?:time|now)/ do
   reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
 end
 
