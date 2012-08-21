@@ -5,15 +5,18 @@ require 'net/http'
 API_KEY = "c7583ecdd7049d52b99abd1601756606"
 
 def lookup word
-  return synonyms if synonyms = store('thesaurus:synonyms').smembers(word)
+  if synonyms = store('thesaurus:synonyms').smembers(word)
+    return synonyms
+  end
 
   if synonyms = fetch_word(word)
     synonyms.each do |s|
       store('thesaurus:synonyms').sadd(word, s)
     end
 
-    synonyms
+    return synonyms
   end
+  [word]
 end
 
 def fetch_word word
