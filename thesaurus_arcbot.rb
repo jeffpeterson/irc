@@ -15,9 +15,9 @@ end
 
 def fetch_word word
   begin
-    json = Net::HTTP.get('words.bighugelabs.com', "api/2/#{API_KEY}/#{word}/json")
+    json = Net::HTTP.get('words.bighugelabs.com', "/api/2/#{API_KEY}/#{word}/json")
   rescue
-    return nil
+    return []
   end
 
   json = JSON.parse(json)
