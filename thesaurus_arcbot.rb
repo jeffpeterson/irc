@@ -38,3 +38,13 @@ def thesaurize sentence
     end
   end
 end
+
+mention_match /thesaurize +(?<text>.+)/ do
+  reply thesaurize(text).capitalize, false
+end
+
+match /!thesaurus +(?<words>.+)/ do
+  words.split(/ +/).each do |word|
+    reply lookup(word).to_sentence
+  end
+end
