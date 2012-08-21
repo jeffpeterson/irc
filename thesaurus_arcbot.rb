@@ -14,7 +14,11 @@ def lookup word
 end
 
 def fetch_word word
-  return nil unless json = Net::HTTP.get('words.bighugelabs.com', "api/2/#{API_KEY}/#{word}/json")
+  begin
+    json = Net::HTTP.get('words.bighugelabs.com', "api/2/#{API_KEY}/#{word}/json")
+  rescue
+    return nil
+  end
 
   json = JSON.parse(json)
   synonyms = []
