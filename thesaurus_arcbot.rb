@@ -8,7 +8,10 @@ def lookup word
   return synonyms if synonyms = store('thesaurus:synonyms').smembers(word)
 
   if synonyms = fetch_word(word)
-    store('thesaurus:synonyms').sadd(word, synonyms)
+    synonyms.each do |s|
+      store('thesaurus:synonyms').sadd(word, s)
+    end
+
     synonyms
   end
 end
