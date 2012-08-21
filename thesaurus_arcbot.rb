@@ -37,11 +37,11 @@ def fetch_word word
 end
 
 def thesaurize sentence
-  sentence = sentence.split(/ +/i) unless sentence.is_a? Array
+  self.sentence = sentence.split(/ +/i) unless sentence.is_a? Array
   sentence.map! do |word|
     word.gsub(/[a-z]+/i) do
       if synonyms = lookup(word)
-        return synonyms[0,3].shuffle.first
+        return synonyms.shuffle.first
       end
 
       word
@@ -57,6 +57,6 @@ end
 
 match /!thesaurus +(?<words>.+)/ do
   words.split(/ +/).each do |word|
-    reply lookup(word).to_sentence
+    reply lookup(word).to_sentence, false
   end
 end
