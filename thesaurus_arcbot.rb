@@ -41,6 +41,8 @@ def thesaurize sentence
       word
     end
   end
+
+  sentence.join(' ')
 end
 
 mention_match /thesaurize +(?<text>.+)/ do
