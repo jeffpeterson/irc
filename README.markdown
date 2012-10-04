@@ -1,7 +1,16 @@
+Installation
+============
+
+Simply install the gem:
+
+`gem install irc`
+
 Usage
 =====
 
-## Quickstart
+Quickstart
+----------
+
 ``` ruby
 require 'irc'
 
@@ -24,9 +33,12 @@ start!
 Then, `ruby newbot.rb`
 
 
-## Subclass
+Subclass
+--------
 
-You can also `require 'irc/base'` and subclass `IRC::Bot`:
+Polluting the global namespace is bad.
+Instead, you can `require 'irc/base'` and subclass `IRC::Bot`:
+
 ``` ruby
 require 'irc/base'
 
