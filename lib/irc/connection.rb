@@ -1,15 +1,15 @@
 require 'socket'
 require 'thread'
+require 'monitor'
 
 module IRC
   class Connection
+    include MonitorMixin
+
+    attr_accessor :host, :port
     def initialize host = nil, port = 6667
       @host = host
       @port = port
-    end
-
-    def mutex
-      @mutex ||= Mutex.new
     end
 
     def disconnected?
@@ -21,12 +21,12 @@ module IRC
     end
 
     def write *strings
-      # mutex do
+      synchronize do
         strings.each do |string|
           puts '-> ' + string
           socket.print string + "\r\n"
         end
-      # end
+      end
     end
 
     def join *channels

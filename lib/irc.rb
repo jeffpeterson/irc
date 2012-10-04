@@ -1,7 +1,7 @@
 require 'irc/base'
 
 class NewBot < IRC::Bot
-
+  on(:ping) { connection.pong params}
 end
 
 module IRC
