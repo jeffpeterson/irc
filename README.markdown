@@ -25,12 +25,19 @@ end
 
 # Tell the time and date:
 match /^!(?:time|now)/ do
-  reply Time.now.strftime("it is %l:%M %P on %A, %B %-d, %Y.").gsub(/[ ]+/, ' ' )
+  reply Time.now
+end
+
+# mention_match requires messages to start with the name of the bot
+mention_match /join (?<chan>.+)/ do
+  channels = chan.split(/[, ]+/)
+  connection.join channels
+  reply "I joined #{channels.to_sentence}."
 end
 
 start!
 ```
-Then, `ruby newbot.rb`
+Then, run with `ruby bot.rb`
 
 
 Subclass
@@ -52,8 +59,8 @@ end
 ```
 
 You can re-load the bot to update its callbacks without disconnecting:
+
 ``` ruby
-# mention_match requires messages to start with the name of the bot
 mention_match /reload!/ do
   self.class.reset!
 
