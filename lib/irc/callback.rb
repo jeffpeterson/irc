@@ -43,25 +43,8 @@ module IRC
         callbacks[action] << callback
         callbacks[:all]   << callback
       end
-
-      def before action, &block
-        filter :before, action, &block
-      end
-
-      def after action, &block
-        filter :after, action, &block
-      end
-
-      def filter when, action, &block
-        # filters[when] << 
-      end
-
       def callbacks
         @callbacks ||= Hash.new {|hash,key| hash[key] = []}
-      end
-
-      def filters
-        @filters ||= Hash.new {|hash,key| hash[key] = Hash.new {|h,k| h[k] = []}}
       end
 
       def clear!

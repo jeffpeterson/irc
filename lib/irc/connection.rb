@@ -21,11 +21,9 @@ module IRC
     end
 
     def write *strings
-      synchronize do
-        strings.each do |string|
-          puts '-> ' + string
-          socket.print string + "\r\n"
-        end
+      strings.each do |string|
+        puts '-> ' + string
+        socket.print string + "\r\n"
       end
     end
 
