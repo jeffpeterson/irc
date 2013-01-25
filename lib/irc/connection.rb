@@ -21,10 +21,7 @@ module IRC
     end
 
     def write *strings
-      strings.each do |string|
-        puts '-> ' + string
-        socket.print string + "\r\n"
-      end
+      socket.print *strings.map { |str| str + "\r\n" }
     end
 
     def join *channels
