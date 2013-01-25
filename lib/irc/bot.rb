@@ -62,7 +62,7 @@ module IRC
       end
 
       def reset!
-        Callback.reset!
+        Callback.clear!
         @channels = []
       end
 
