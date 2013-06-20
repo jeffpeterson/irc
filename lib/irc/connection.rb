@@ -74,7 +74,7 @@ module IRC
       unless @listening
         loop do
           @listening = true
-          socket.lines "\r\n" do |line|
+          socket.each_line "\r\n" do |line|
             message = Message.new(line, self)
             Callback.handle message
           end
