@@ -36,7 +36,7 @@ module IRC
 
     def conjugate noun, lookup = nil
       lookup ||= {
-        'me'  => nick, 
+        'me'  => nick,
         'you' => self.class.nick,
         nick  => 'you'
       }
@@ -73,7 +73,7 @@ module IRC
 
       def port _port = nil
         puts "   port: '#{_port}'"
-        @port = _port || @port
+        @port = _port || @port || 6667
       end
 
       def nick _nick = nil
